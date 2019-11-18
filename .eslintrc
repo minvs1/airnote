@@ -1,0 +1,60 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:flowtype/recommended"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "plugins": ["react", "flowtype"],
+  "globals": {
+    "App": true
+  },
+  "rules": {
+    "indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "never"],
+    "no-undef": 0,
+    "array-element-newline": ["error", "consistent"], 
+    "array-bracket-newline": ["error", "consistent"],
+    "react/no-unknown-property": 1,
+    "react/react-in-jsx-scope": 1,
+    "react/self-closing-comp": 1,
+    "react/sort-comp": 1,
+    "react/sort-prop-types": 1,
+    "react/jsx-boolean-value": 1,
+    "react/jsx-closing-bracket-location": 1,
+    "react/jsx-curly-spacing": 1,
+    "react/jsx-indent-props": [2, 2],
+    "react/jsx-indent": [1, 2],
+    "react/jsx-key": 1,
+    "react/jsx-no-duplicate-props": 1,
+    "react/jsx-no-literals": 1,
+    "react/jsx-no-target-blank": 1,
+    "react/jsx-no-undef": 1,
+    "react/jsx-pascal-case": 1,
+    "react/jsx-sort-props": 1,
+    "react/jsx-uses-react": 1,
+    "react/jsx-uses-vars": 1,
+    "react/display-name": [0],
+    "flowtype/generic-spacing": 0
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": true
+  },
+  "editor.tabSize": 2,
+  "eslint.autoFixOnSave": true,
+  "eslint.alwaysShowStatus": true,
+  "editor.multiCursorModifier": "ctrlCmd",
+  "javascript.validate.enable": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/*/**": true
+  }
+}

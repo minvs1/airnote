@@ -1,0 +1,38 @@
+{
+  "name": "airnote",
+  "version": "1.0.0",
+  "description": "Self-destruct private notes",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minvs1/airnote.git"
+  },
+  "keywords": [
+    "self-destruct",
+    "private",
+    "encrypted",
+    "note"
+  ],
+  "author": "minvs1",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/minvs1/airnote/issues"
+  },
+  "homepage": "https://github.com/minvs1/airnote#readme",
+  "dependencies": {
+    "@material-ui/core": "^4.6.1",
+    "next": "^9.1.3",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.8",
+    "@types/react": "^16.9.11",
+    "typescript": "^3.7.2"
+  }
+}
