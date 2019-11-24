@@ -4,6 +4,8 @@ import App from 'next/app'
 import { purple } from '@material-ui/core/colors'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
+import { SnackbarProvider, WithSnackbarProps } from 'notistack'
+import Button from '@material-ui/core/Button'
 
 const theme = createMuiTheme({
   palette: {
@@ -28,11 +30,32 @@ class MyApp extends App {
 
   render() {
     const { Component, pageProps } = this.props
+    const notistackRef = React.createRef<WithSnackbarProps>()
+
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
-        <Component {...pageProps} />
+        <SnackbarProvider
+          maxSnack={1}
+          ref={notistackRef}
+          action={key => (
+            <Button
+              color="secondary"
+              onClick={() => {
+                const snackbar = notistackRef.current
+
+                if (snackbar) {
+                  snackbar.closeSnackbar(key)
+                }
+              }}
+            >
+              {'Dismiss'}
+            </Button>
+          )}
+        >
+          <Component {...pageProps} />
+        </SnackbarProvider>
       </ThemeProvider>
     )
   }
