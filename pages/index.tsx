@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import SecretSettings from '../components/SecretSettings'
 import SecretLink from '../components/SecretLink'
 
-// TODO: add babel improt plugin
+// TODO: add babel improt plugin - https://material-ui.com/guides/minimizing-bundle-size/
 
 const useStyles = makeStyles(theme => ({
   '@global': {

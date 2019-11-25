@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -5,8 +6,14 @@ import {
   DialogActions,
   Button,
   DialogContentText,
-  Link,
+  IconButton,
+  Tooltip,
+  TextField,
+  InputAdornment,
 } from '@material-ui/core'
+
+import FileCopyIcon from '@material-ui/icons/FileCopy'
+import DoneIcon from '@material-ui/icons/Done'
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 
@@ -17,17 +24,33 @@ type Props = {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    linkWrapper: {
-      padding: theme.spacing(1),
-      background: 'rgba(255, 255, 255, 0.08)',
+    link: {
+      marginRight: theme.spacing(1),
+      fontSize: '0.8rem',
     },
   })
 )
 
 const SecretLink = ({ link, onClose }: Props) => {
+  const [copied, setCopied] = React.useState(false)
   const classes = useStyles()
+  const secretInputRef = React.useRef<HTMLInputElement>(null)
 
-  // TODO add copy button
+  const copySecretLink = () => {
+    const inputEl = secretInputRef.current
+
+    if (inputEl) {
+      inputEl.select()
+
+      document.execCommand('copy')
+
+      setCopied(true)
+
+      setTimeout(() => {
+        setCopied(false)
+      }, 2000)
+    }
+  }
 
   return (
     <Dialog
@@ -41,17 +64,43 @@ const SecretLink = ({ link, onClose }: Props) => {
       <DialogContent>
         <DialogContentText id="secret-link-description">
           {
-            "After closing the dialog link will disappear. So don't forget to COPY it now."
+            "After closing the dialog link will disappear. So don't forget to save it now."
           }
         </DialogContentText>
 
-        <div className={classes.linkWrapper}>
-          {link && (
-            <Link href={link} target="_blank" rel="noopener noreferrer">
-              {link}
-            </Link>
-          )}
-        </div>
+        {link && (
+          <TextField
+            className={classes.link}
+            label="Your Secret Link"
+            value={link}
+            margin="normal"
+            variant="outlined"
+            inputRef={secretInputRef}
+            fullWidth
+            InputProps={{
+              readOnly: true,
+              endAdornment: document.queryCommandSupported('copy') && (
+                <InputAdornment position="end">
+                  {copied ? (
+                    <Tooltip title="Copied!">
+                      <DoneIcon fontSize="small" color="secondary" />
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title="Copy">
+                      <IconButton
+                        aria-label="copy"
+                        size="small"
+                        onClick={copySecretLink}
+                      >
+                        <FileCopyIcon fontSize="inherit" />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                </InputAdornment>
+              ),
+            }}
+          />
+        )}
       </DialogContent>
 
       <DialogActions>
