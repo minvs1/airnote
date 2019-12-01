@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import fetch from 'isomorphic-unfetch'
 import { useSnackbar } from 'notistack'
+import nanoid from 'nanoid'
+import aesjs from 'aes-js'
 
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
@@ -13,6 +15,7 @@ import SecretSettings from '../components/SecretSettings'
 import SecretLink from '../components/SecretLink'
 
 // TODO: add babel improt plugin - https://material-ui.com/guides/minimizing-bundle-size/
+// TODO: Clean this component
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -84,6 +87,15 @@ interface Props {
   uuid: string
 }
 
+const encryptSecret = (secret: string, password: string): string => {
+  const key = aesjs.utils.utf8.toBytes(password)
+  const secretBytes = aesjs.utils.utf8.toBytes(secret)
+  const aesCtr = new aesjs.ModeOfOperation.ctr(key)
+  const encryptedBytes = aesCtr.encrypt(secretBytes)
+
+  return aesjs.utils.hex.fromBytes(encryptedBytes)
+}
+
 const Home = () => {
   const [secretData, setSecretData] = useState(initialSecretData)
   const [submitting, setSubmitting] = useState(false)
@@ -92,13 +104,16 @@ const Home = () => {
   const { enqueueSnackbar } = useSnackbar()
 
   const submit = async () => {
+    // TODO: add validation
     if (submitting) {
       return
     }
 
     setSubmitting(true)
 
-    const encryptedSecret = secretData.secret
+    const password = nanoid(16)
+
+    const encryptedSecret = encryptSecret(secretData.secret, password)
 
     try {
       const response = await fetch('/api/secrets', {
@@ -110,7 +125,7 @@ const Home = () => {
 
       const data = await response.json()
 
-      setSecretLink(`${window.location.origin}/${data.uuid}#TODO`)
+      setSecretLink(`${window.location.origin}/${data.id}#${password}`)
     } catch {
       enqueueSnackbar('Failed to save your secret. Please try again later...', {
         anchorOrigin: {

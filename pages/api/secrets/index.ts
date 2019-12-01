@@ -1,18 +1,24 @@
-import uuidv1 from 'uuid/v1'
+import nanoid from 'nanoid'
 import db from '../../../lib/db'
 import { NextApiRequest, NextApiResponse } from 'next'
 
+// TODO: add tests
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method != 'POST') {
+    res.status(404)
+
     return
   }
 
-  const key = uuidv1()
+  // TODO: Add validations
+
+  const id = nanoid(16)
   const body = JSON.parse(req.body)
 
   const encryptedSecret = body.encrypted_secret
 
-  await db.set(key, encryptedSecret)
+  await db.set(id, encryptedSecret)
 
-  res.status(200).json({ uuid: uuidv1() })
+  res.status(200).json({ id })
 }

@@ -59,12 +59,14 @@ const SecretLink = ({ link, onClose }: Props) => {
       aria-labelledby="secret-link-dialog"
       aria-describedby="secret-link-description"
     >
-      <DialogTitle id="secret-link-dialog">{'Your secret link'}</DialogTitle>
+      <DialogTitle id="secret-link-dialog">
+        {'Your secret is safe!'}
+      </DialogTitle>
 
       <DialogContent>
         <DialogContentText id="secret-link-description">
           {
-            "After closing the dialog link will disappear. So don't forget to save it now."
+            'The secret was encrypted with a password that is displayed only to you for a single time.'
           }
         </DialogContentText>
 
