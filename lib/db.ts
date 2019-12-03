@@ -18,4 +18,5 @@ client.on('error', function(err) {
 export default {
   set: promisify(client.set).bind(client),
   get: promisify(client.get).bind(client),
+  unlink: promisify(client.unlink).bind(client),
 }
