@@ -12,14 +12,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    // TODO: Add validations
-
     const id = nanoid(16)
     const body = JSON.parse(req.body)
 
     const encryptedSecret = body.encrypted_secret
 
-    await db.set(id, encryptedSecret)
+    if (!encryptedSecret) {
+      res.status(422)
+
+      return
+    }
+
+    await db.set(`id_${id}`, encryptedSecret)
 
     res.status(200).json({ id })
   } catch (err) {

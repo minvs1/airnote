@@ -104,8 +104,7 @@ const Home = () => {
   const { enqueueSnackbar } = useSnackbar()
 
   const submit = async () => {
-    // TODO: add validation
-    if (submitting) {
+    if (submitting || !secretData.secret || secretData.secret === '') {
       return
     }
 

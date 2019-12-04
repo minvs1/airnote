@@ -8,14 +8,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return
   }
 
-  // TODO: Validate
   try {
     const id = req.query.id.toString()
 
-    const encryptedSecret = await db.get(id)
+    const encryptedSecret = await db.get(`id_${id}`)
 
     if (encryptedSecret) {
-      await db.unlink(id)
+      // @ts-ignore // del does not have args
+      db.del(id)
 
       res.status(200).json({ encryptedSecret })
     } else {
