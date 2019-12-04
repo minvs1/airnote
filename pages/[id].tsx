@@ -163,14 +163,13 @@ const ViewSecret: NextPage<{ id: string }> = ({ id }) => {
   )
 }
 
-ViewSecret.getInitialProps = async ({ query }) => {
+ViewSecret.getInitialProps = async ({ req, query }) => {
   // let protocol = 'https:'
   // let host = req ? req.headers.host : window.location.hostname
-  // if (host.indexOf('localhost') > -1) {
+
+  // if (host && host.match(/(127\.0\.0\.1|localhost)/)) {
   //   protocol = 'http:'
   // }
-
-  // // const baseUrl = req ? `${req.protocol}://${req.get('Host')}` : ''
 
   // const res = await fetch(`${protocol}//${host}/api/secrets/${query.id}`)
 
