@@ -10,6 +10,7 @@ import {
   TextField,
   Button,
   CircularProgress,
+  Typography,
 } from '@material-ui/core'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
@@ -33,6 +34,10 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('xs')]: {
       height: '100%',
     },
+  },
+  notFoundContainer: {
+    display: 'flex',
+    flexDirection: 'column',
   },
   secret: {
     margin: 0,
@@ -67,6 +72,12 @@ const useStyles = makeStyles(theme => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  notFoundButton: {
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline',
+    },
+  },
 }))
 
 const decryptSecret = (encryptedSecret: string, password: string): string => {
@@ -78,10 +89,40 @@ const decryptSecret = (encryptedSecret: string, password: string): string => {
   return aesjs.utils.utf8.fromBytes(decryptedBytes)
 }
 
-const ViewSecret: NextPage<{ id: string }> = ({ id }) => {
+const ViewSecret: NextPage<{ id: string; statusCode: number }> = ({
+  id,
+  statusCode,
+}) => {
   const [loading, setLoading] = React.useState(false)
   const [secret, setSecret] = React.useState<string | null>(null)
   const classes = useStyles()
+
+  console.log(statusCode)
+
+  if (statusCode == 404) {
+    return (
+      <Box className={classes.root}>
+        <Container maxWidth="sm" className={classes.notFoundContainer}>
+          <Typography variant="h1" component="h2" gutterBottom>
+            {'404'}
+          </Typography>
+
+          <Typography variant="subtitle1" gutterBottom>
+            {'Secret your are trying to find does not exists.'}
+          </Typography>
+
+          <Typography variant="button" display="block" gutterBottom>
+            <a
+              className={classes.notFoundButton}
+              onClick={() => Router.push('/')}
+            >
+              {'Create new one'}
+            </a>
+          </Typography>
+        </Container>
+      </Box>
+    )
+  }
 
   const showSecret = async () => {
     setLoading(true)
@@ -164,20 +205,16 @@ const ViewSecret: NextPage<{ id: string }> = ({ id }) => {
 }
 
 ViewSecret.getInitialProps = async ({ req, query }) => {
-  // let protocol = 'https:'
-  // let host = req ? req.headers.host : window.location.hostname
+  let protocol = 'https:'
+  let host = req ? req.headers.host : window.location.hostname
 
-  // if (host && host.match(/(127\.0\.0\.1|localhost)/)) {
-  //   protocol = 'http:'
-  // }
+  if (host && host.match(/(127\.0\.0\.1|localhost)/)) {
+    protocol = 'http:'
+  }
 
-  // const res = await fetch(`${protocol}//${host}/api/secrets/${query.id}`)
+  const api = await fetch(`${protocol}//${host}/api/secrets/${query.id}`)
 
-  // const secret = await res.json()
-
-  // console.log(secret)
-
-  return { id: query.id.toString() }
+  return { id: query.id.toString(), statusCode: api.status }
 }
 
 export default ViewSecret

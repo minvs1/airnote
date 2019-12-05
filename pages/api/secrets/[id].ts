@@ -6,20 +6,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const encryptedSecret = await db.get(`id_${id}`)
 
   if (!encryptedSecret) {
-    res.status(404)
+    res.status(404).end()
     return
   }
 
   switch (req.method) {
     case 'DELETE':
       // @ts-ignore // del does not have args in types
-      db.del(id)
+      db.del(`id_${id}`)
+
       res.status(200).json({ encryptedSecret })
       break
     case 'GET':
-      res.status(204)
+      res.status(204).end()
       break
     default:
-      res.status(404)
+      res.status(422).end()
   }
 }
