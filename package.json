@@ -4,6 +4,7 @@
   "description": "Self-destruct private notes",
   "main": "index.js",
   "scripts": {
+    "test": "jest",
     "dev": "next",
     "build": "next build",
     "start": "next start"
@@ -28,8 +29,6 @@
     "@material-ui/core": "^4.6.1",
     "@material-ui/icons": "^4.5.1",
     "@material-ui/lab": "^4.0.0-alpha.32",
-    "@types/aes-js": "^3.1.0",
-    "@types/nanoid": "^2.1.0",
     "aes-js": "^3.1.2",
     "isomorphic-unfetch": "^3.0.0",
     "nanoid": "^2.1.7",
@@ -40,9 +39,14 @@
     "redis": "^2.8.0"
   },
   "devDependencies": {
+    "@types/aes-js": "^3.1.0",
+    "@types/jest": "^24.0.23",
+    "@types/nanoid": "^2.1.0",
     "@types/node": "^12.12.8",
     "@types/react": "^16.9.11",
     "@types/redis": "^2.8.14",
+    "babel-jest": "^24.9.0",
+    "jest": "^24.9.0",
     "typescript": "^3.7.2"
   }
 }
