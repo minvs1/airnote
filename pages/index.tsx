@@ -100,6 +100,9 @@ const Home = () => {
   const [secretData, setSecretData] = useState(initialSecretData)
   const [submitting, setSubmitting] = useState(false)
   const [secretLink, setSecretLink] = useState<string | null>(null)
+  const [settings, setSettings] = useState({
+    selfDestruct: 'after-read',
+  })
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
 
@@ -119,6 +122,7 @@ const Home = () => {
         method: 'POST',
         body: JSON.stringify({
           encrypted_secret: encryptedSecret,
+          settings,
         }),
       })
 
@@ -141,7 +145,11 @@ const Home = () => {
     <Box className={classes.root}>
       <Container maxWidth="sm" className={classes.container}>
         <div className={classes.secretWrapper}>
-          <SecretSettings className={classes.secretSettings} />
+          <SecretSettings
+            className={classes.secretSettings}
+            settings={settings}
+            setSettings={setSettings}
+          />
 
           <TextField
             className={classes.unencryptedSecret}

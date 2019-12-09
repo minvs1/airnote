@@ -1,18 +1,27 @@
 import { useState } from 'react'
-import { Typography, Link } from '@material-ui/core'
+import {
+  Typography,
+  Link,
+  MenuItem,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Button,
+} from '@material-ui/core'
 import SettingsIcon from '@material-ui/icons/Settings'
-import IconButton from '@material-ui/core/IconButton'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
+import { expireTime } from '../utils'
 
 interface Props {
   className: string
+  settings: {
+    selfDestruct: string
+  }
+  setSettings: any
 }
 
 const useStyles = makeStyles(theme => ({
@@ -30,7 +39,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const SecretSettings = ({ className }: Props) => {
+const SecretSettings = ({ className, settings, setSettings }: Props) => {
   const [open, setOpen] = useState(false)
   const classes = useStyles()
 
@@ -61,13 +70,22 @@ const SecretSettings = ({ className }: Props) => {
           <DialogContentText>{'Adjust your secret settings'}</DialogContentText>
 
           <TextField
-            autoFocus
+            select
             margin="dense"
-            id="name"
-            label="Email Address"
-            type="email"
+            label="Self desctruction"
             fullWidth
-          />
+            value={settings.selfDestruct}
+            onChange={event =>
+              setSettings({ ...settings, selfDestruct: event.target.value })
+            }
+            helperText="Destroy this note after a specific time, even if it's not read."
+          >
+            {expireTime.map(option => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
         </DialogContent>
 
         <DialogActions>
@@ -82,7 +100,7 @@ const SecretSettings = ({ className }: Props) => {
           align="center"
           className={classes.footer}
         >
-          <div className={classes.footerLinksWrapper}>
+          <span className={classes.footerLinksWrapper}>
             <Link
               color="inherit"
               href="https://github.com/minvs1/airnote"
@@ -91,7 +109,7 @@ const SecretSettings = ({ className }: Props) => {
             >
               {'GitHub'}
             </Link>
-          </div>
+          </span>
         </Typography>
       </Dialog>
     </>

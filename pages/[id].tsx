@@ -97,8 +97,6 @@ const ViewSecret: NextPage<{ id: string; statusCode: number }> = ({
   const [secret, setSecret] = React.useState<string | null>(null)
   const classes = useStyles()
 
-  console.log(statusCode)
-
   if (statusCode == 404) {
     return (
       <Box className={classes.root}>

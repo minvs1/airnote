@@ -17,6 +17,7 @@ client.on('error', function(err) {
 
 export default {
   set: promisify(client.set).bind(client),
+  setex: promisify(client.setex).bind(client),
   get: promisify(client.get).bind(client),
   del: promisify(client.del).bind(client),
 }
