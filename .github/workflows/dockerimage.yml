@@ -10,8 +10,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Build the Docker image
+    - name: Build image
+      run: |
+        docker build . --file Dockerfile --tag minvs1/airnote:latest
+    - name: Push image
       run: |
         docker login docker.pkg.github.com --username minvs1
-        docker tag IMAGE_ID docker.pkg.github.com/minvs1/airnote/airnote:$GITHUB_SHA
+        docker tag minvs1/airnote:latest docker.pkg.github.com/minvs1/airnote/airnote:$GITHUB_SHA
         docker push docker.pkg.github.com/minvs1/airnote/airnote:$GITHUB_SHA
