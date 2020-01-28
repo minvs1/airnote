@@ -10,11 +10,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - name: Docker Login
+      uses: azure/docker-login@v1
+      with:
+        login-server: docker.pkg.github.com
+        username: $GITHUB_ACTOR
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build image
       run: |
         docker build . --file Dockerfile --tag minvs1/airnote:latest
     - name: Push image
       run: |
-        docker login docker.pkg.github.com --username minvs1
         docker tag minvs1/airnote:latest docker.pkg.github.com/minvs1/airnote/airnote:$GITHUB_SHA
         docker push docker.pkg.github.com/minvs1/airnote/airnote:$GITHUB_SHA
