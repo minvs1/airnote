@@ -8,7 +8,7 @@ import { expireTime } from '../../../utils'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method != 'POST') {
-    res.status(404)
+    res.status(404).end('Bad HTTP method')
 
     return
   }
@@ -21,7 +21,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const encryptedSecret = body.encrypted_secret
 
     if (!encryptedSecret) {
-      res.status(422)
+      res.status(422).end('Encrypted secret not found')
 
       return
     }
@@ -38,6 +38,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   } catch (err) {
     console.log(err)
 
-    res.status(422)
+    res.status(422).end()
   }
 }
