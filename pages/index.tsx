@@ -152,6 +152,7 @@ const Home = () => {
           />
 
           <TextField
+            autoComplete="false"
             className={classes.unencryptedSecret}
             label="Tell me a secret..."
             multiline
@@ -160,8 +161,16 @@ const Home = () => {
             margin="normal"
             variant="outlined"
             fullWidth
-            InputProps={{ className: classes.unencryptedSecretInput }}
-            inputProps={{ style: { height: '100%' } }}
+            InputProps={{
+              className: classes.unencryptedSecretInput,
+            }}
+            inputProps={{
+              autocorrect: 'off',
+              autocapitalize: 'off',
+              spellcheck: 'false',
+              'data-gramm': 'false',
+              style: { height: '100%' },
+            }}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setSecretData({ ...secretData, secret: event.target.value })
             }
