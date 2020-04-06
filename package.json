@@ -48,6 +48,6 @@
     "babel-jest": "^24.9.0",
     "jest": "^24.9.0",
     "typescript": "^3.7.2",
-    "minimist": ">=1.2.2"
+    "minimist": ">=1.2.3"
   }
 }
