@@ -1,8 +1,9 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
 import { NextPage } from 'next'
 import Router from 'next/router'
 import fetch from 'isomorphic-unfetch'
 import aesjs from 'aes-js'
+
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Box,
@@ -11,10 +12,11 @@ import {
   Button,
   CircularProgress,
   Typography,
+  Tooltip,
 } from '@material-ui/core'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   '@global': {
     'html, body, #__next': {
       width: '100%',
@@ -93,9 +95,24 @@ const ViewSecret: NextPage<{ id: string; statusCode: number }> = ({
   id,
   statusCode,
 }) => {
-  const [loading, setLoading] = React.useState(false)
-  const [secret, setSecret] = React.useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [secret, setSecret] = useState<string | null>(null)
+  const [password, setPassword] = useState('')
   const classes = useStyles()
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setPassword(window.location.hash.substring(1))
+    }
+
+    window.addEventListener('hashchange', handleHashChange)
+
+    handleHashChange()
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange)
+    }
+  }, [])
 
   if (statusCode == 404) {
     return (
@@ -124,22 +141,19 @@ const ViewSecret: NextPage<{ id: string; statusCode: number }> = ({
 
   const showSecret = async () => {
     setLoading(true)
-    // TODO: add loading and label Decrypting...
-    try {
-      const res = await fetch(`/api/secrets/${id}`, {
-        method: 'DELETE',
-      })
 
-      const { encryptedSecret } = await res.json()
-
-      // TODO: check if hash exists
-      const key = window.location.hash.substring(1)
-
-      setSecret(decryptSecret(encryptedSecret, key))
-      setLoading(false)
-    } catch (err) {
-      console.log(err)
+    if (password == '') {
+      return
     }
+
+    const res = await fetch(`/api/secrets/${id}`, {
+      method: 'DELETE',
+    })
+
+    const { encryptedSecret } = await res.json()
+
+    setSecret(decryptSecret(encryptedSecret, password))
+    setLoading(false)
   }
 
   return (
@@ -178,15 +192,29 @@ const ViewSecret: NextPage<{ id: string; statusCode: number }> = ({
 
         {!secret && (
           <div className={classes.submitWrapper}>
-            <Button
-              className={classes.submitButton}
-              onClick={showSecret}
-              disabled={loading}
-              variant="outlined"
-              color="secondary"
-            >
-              {'Reveal!'}
-            </Button>
+            {(() => {
+              const btn = (
+                <Button
+                  className={classes.submitButton}
+                  onClick={showSecret}
+                  disabled={loading || password == ''}
+                  variant="outlined"
+                  color="secondary"
+                >
+                  {'Reveal!'}
+                </Button>
+              )
+
+              if (password == '') {
+                return (
+                  <Tooltip title="Password is missing">
+                    <div>{btn}</div>
+                  </Tooltip>
+                )
+              }
+
+              return btn
+            })()}
 
             {loading && (
               <CircularProgress
