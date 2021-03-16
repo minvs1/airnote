@@ -1,0 +1,31 @@
+version: '3'
+
+volumes: 
+  redis_data:
+  node_modules:
+
+services:
+  app:
+    user: vscode
+    build: 
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        VARIANT: 14
+    init: true
+    volumes:
+      - ..:/workspace:cached
+      - node_modules:/workspace/node_modules
+    environment: 
+      REDIS_HOST: redis
+    command: sleep infinity 
+    links: 
+      - redis
+
+  redis:
+    image: redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    ports:
+      - 6379:6379
