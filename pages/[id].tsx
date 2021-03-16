@@ -172,7 +172,7 @@ const ViewSecret: NextPage<{ id: string; statusCode: number }> = ({
       method: 'DELETE',
     })
 
-    if (res.status) {
+    if (res.status == 404) {
       setNotFound(true)
       setLoading(false)
       
@@ -271,7 +271,7 @@ const ViewSecret: NextPage<{ id: string; statusCode: number }> = ({
               'Password is missing. URL should look like this:'
             }
             <div className={classes.missingLinkContainer}>
-              <span>{window.location.href}</span>
+              <span>{typeof window !== 'undefined' && window.location.href || 'https://example.com/McdOMAR5-MFdvuSy'}</span>
               <span>{'#password'}</span>
             </div>
           </DialogContentText>
