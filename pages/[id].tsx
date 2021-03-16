@@ -6,6 +6,11 @@ import aesjs from 'aes-js'
 
 import { makeStyles } from '@material-ui/core/styles'
 import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
   Box,
   Container,
   TextField,
@@ -80,6 +85,16 @@ const useStyles = makeStyles((theme) => ({
       textDecoration: 'underline',
     },
   },
+  missingLinkContainer: {
+    margin: '6px 0',
+    padding: '6px 12px',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '3px',
+    background: 'rgba(0, 0, 0, 0.1)',
+    '& > span:first-child': {
+      color: 'rgba(255, 255, 255, 0.35)'
+    }
+  }
 }))
 
 const decryptSecret = (encryptedSecret: string, password: string): string => {
@@ -96,6 +111,7 @@ const ViewSecret: NextPage<{ id: string; statusCode: number }> = ({
   statusCode,
 }) => {
   const [loading, setLoading] = useState(false)
+  const [notFound, setNotFound] = useState(false)
   const [secret, setSecret] = useState<string | null>(null)
   const [password, setPassword] = useState('')
   const classes = useStyles()
@@ -114,7 +130,13 @@ const ViewSecret: NextPage<{ id: string; statusCode: number }> = ({
     }
   }, [])
 
-  if (statusCode == 404) {
+  useEffect(() => {
+    if (statusCode == 404) {
+      setNotFound(true)
+    }
+  }, [statusCode])
+
+  if (notFound) {
     return (
       <Box className={classes.root}>
         <Container maxWidth="sm" className={classes.notFoundContainer}>
@@ -149,6 +171,13 @@ const ViewSecret: NextPage<{ id: string; statusCode: number }> = ({
     const res = await fetch(`/api/secrets/${id}`, {
       method: 'DELETE',
     })
+
+    if (res.status) {
+      setNotFound(true)
+      setLoading(false)
+      
+      return
+    }
 
     const { encryptedSecret } = await res.json()
 
@@ -226,6 +255,28 @@ const ViewSecret: NextPage<{ id: string; statusCode: number }> = ({
           </div>
         )}
       </Container>
+
+      <Dialog
+        open={!password}
+        aria-labelledby="secret-link-dialog"
+        aria-describedby="secret-link-description"
+      >
+        <DialogTitle>
+          {'Secret Password is Missing!'}
+        </DialogTitle>
+
+        <DialogContent>
+          <DialogContentText>
+            {
+              'Password is missing. URL should look like this:'
+            }
+            <div className={classes.missingLinkContainer}>
+              <span>{window.location.href}</span>
+              <span>{'#password'}</span>
+            </div>
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </Box>
   )
 }
